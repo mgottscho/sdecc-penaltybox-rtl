@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Author: Mark Gottscho
+# Email: mgottscho@ucla.edu
+#
+# Last updated 10/4/2015 for EE 201A Fall 2015
+#
+# Source this script if you are using bash for EE 201A on eeapps.seas.ucla.edu as follows:
+# $ source bash_ee201a_setup
+
+# Append OpenAccess binaries to executable path
+export PATH=$PATH:/w/class/ee201a/ee201ata/oa/bin/linux_rhel40_64/opt
+
+# Append OpenAccess libraries to load path
+if [[ "${LD_LIBRARY_PATH+isset}" = isset ]]; then
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/w/class/ee201a/ee201ata/oa/lib/linux_rhel40_64/opt
+else
+	export LD_LIBRARY_PATH=/w/class/ee201a/ee201ata/oa/lib/linux_rhel40_64/opt
+fi 
+
+# For OpenAccess Makefiles
+export COMPILER_PATH=/usr
+
+# For Cadence Encounter Digital Implementation System (EDI aka Encounter)
+source /w/apps3/Cadence/EDI110/SETUP.bash
+
+# Append standard library locations
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64:/usr/lib:/lib64:/lib

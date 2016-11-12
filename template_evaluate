@@ -1,0 +1,64 @@
+# Author: Mark Gottscho
+# Email: mgottscho@ucla.edu
+# UCLA EE 201A -- VLSI Design Automation
+# Fall 2015
+# Lab 2 Template Evaluation Script
+
+# Use verbose RC script console output
+set_attribute information_level 0
+
+# EE 201A Lab 2: Set base working directory: have this point to your directory where you will be doing your lab
+set base_dir "./"
+
+# Set path where RC will look for RTL design files
+set_attribute hdl_search_path {./output/}
+
+# Make sure errors are reported for missing modules
+set_attribute hdl_error_on_blackbox true /
+
+# Set path where RC will look for timing libraries, i.e., Liberty files (.lib suffix)
+set_attribute lib_search_path {./}
+
+# Set filename of the Liberty file for our Nangate library
+set_attribute library NangateOpenCellLibrary_typical.lib
+
+# Set list of all necessary RTL files written in HDLs like Verilog or VHDL, separated by spaces
+set hdl_files {Verilog_filename}
+
+# Set the name of the design within RC
+set DNAME s1494
+
+# Set the name of the top-level module used in the design HDL
+set DESIGN s1494_bench
+
+# Set the name of the clock signal used in the design HDL
+set clkpin clkname
+
+# Load Verilog design files into RC
+read_hdl -v2001 ${hdl_files}
+
+# Initialize design from design RTL
+elaborate $DESIGN
+
+###################################
+# Apply design constraints for logic synthesis -- define clock period, slew rate, relative block I/O delays, etc. Here, we've only set timing constraints, with no area or power constraints listed.
+
+# Set clock period
+# EE 201A Lab 2 Problem 1A: Modify ONLY the clock period constraint in following line
+set clock [define_clock -period 1000 -name ${clkpin} [clock_ports]]	
+
+# Set block I/O external delays (needed for tool to "close timing")
+external_delay -input 0 -clock ${clkpin} [find / -port ports_in/*]
+external_delay -output 0 -clock ${clkpin} [find / -port ports_out/*]
+
+# Set clock slew rate (rise/fall time)
+dc::set_clock_transition .1 ${clkpin}
+###################################
+
+# Generate post-synthesis reports on timing, area, and power estimates
+report timing > output/evaluate_report_timing.txt
+report power > output/evaluate_report_power.txt
+#report gates  > output/evaluate_report_gates.txt
+
+# Exit RC 
+quit
